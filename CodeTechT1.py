@@ -1,7 +1,3 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# In[1]:
 
 
 import pandas as pd 
@@ -13,26 +9,15 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_squared_error, r2_score
 
 
-
-# In[2]:
-
-
 df=pd.read_csv("C:/Users/harma/Desktop/Financial Sample.csv")
 
-
-# In[3]:
-
-
+# Viewing the dataset 
 df.head()
 
-
-# In[4]:
 
 
 df.columns
 
-
-# In[5]:
 
 
 # Eliminating the white spaces 
@@ -40,20 +25,12 @@ df.columns = df.columns.str.strip()
 
  
 
-
-# In[6]:
-
-
+# Checking for eliminated white spaces 
 df.columns
-
-
-# In[7]:
 
 
 df.dtypes
 
-
-# In[8]:
 
 
 # Changing the Datatypes 
@@ -65,14 +42,10 @@ for col in num_col:
 
 
 
-# In[9]:
-
 
 # Changing data types to datatime 
 df['Date'] = pd.to_datetime(df['Date'],errors='coerce')
 
-
-# In[10]:
 
 
 # Changing  Data type to category 
@@ -81,40 +54,29 @@ for col in Cat_col:
     df[col]=df[col].astype('category')
 
 
-# In[11]:
 
 
 # reviewing the datatype 
 df.dtypes
 
 
-# In[12]:
-
-
 df.head()
 
-
-# In[13]:
 
 
 # Checking for null values 
 df.isnull().sum()
 
 
-# In[14]:
-
 
 #filling the null values with 0
 df['Profit'] = df['Profit'].fillna(0)
 
 
-# In[15]:
 
 
 df.isnull().sum()
 
-
-# In[16]:
 
 
 # Plotting histogram for Sales
@@ -125,46 +87,33 @@ plt.ylabel('Frequency')
 plt.show()
 
 
-# In[17]:
-
 
 sns.boxplot(x=df['Profit'])
 
 
-# In[18]:
 
 
 # Kernel Density Estimate (kDE) to understand the Distribution of Discounts 
 sns.kdeplot(df['Discounts'])
 
 
-# In[19]:
-
-
 # Correlation Matrix to Understand the relationships between Variable 
 correlation_matrix = df[['Units Sold', 'Sale Price', 'Gross Sales', 'Discounts', 'Sales', 'COGS', 'Profit']].corr()
 
-
-# In[20]:
 
 
 sns.heatmap(correlation_matrix, annot=True, cmap='coolwarm')
 
 
-# In[21]:
 
 
 # Checking For Outliers 
 
 
-# In[22]:
-
 
 z_scores = np.abs((df['Profit'] - df['Profit'].mean()) / df['Profit'].std())
 outliers = df[z_scores > 3]
 
-
-# In[23]:
 
 
 Q1 = df['Profit'].quantile(0.25)
@@ -173,95 +122,77 @@ IQR = Q3 - Q1
 outliers = df[(df['Profit'] < (Q1 - 1.5 * IQR)) | (df['Profit'] > (Q3 + 1.5 * IQR))]
 
 
-# In[24]:
-
 
 # Total Sales By Segments 
 sns.barplot(x='Segment', y='Sales', data=df)
 
 
-# In[25]:
+
 
 
 # Total Profit By Country 
 sns.barplot(x='Country', y='Profit', data=df)
 
 
-# In[26]:
+
 
 
 # Total Sales By Month 
 df.groupby('Month Name')['Sales'].sum().plot(kind='line')
 
 
-# In[27]:
-
 
 # Profit Trend by Year 
 sns.lineplot(x='Year', y='Profit', data=df)
 
-
-# In[28]:
 
 
 # Relationship between Discount and Sales 
 sns.scatterplot(x='Discounts', y='Sales', data=df)
 
 
-# In[29]:
 
 
 # Relationship Betwween Sales and Profit 
 sns.regplot(x='Sales', y='Profit', data=df)
 
 
-# In[30]:
 
 
 # Pairwise Relationships Between Key Metrics 
 sns.pairplot(df[['Units Sold', 'Sale Price', 'Gross Sales', 'Discounts', 'Sales', 'COGS', 'Profit']])
 
 
-# In[31]:
 
 
 # Performig Predictive modelling- Simple Linear regression  
+# Define the input feature (COGS) and target variable (Profit)
 x=df[['COGS']]
 y=df['Profit']
 
 
-# In[32]:
 
-
+# Split data into training and testing sets with an 80-20 split
 from sklearn.model_selection import train_test_split
 x_train ,x_test ,y_train ,y_test = train_test_split(x,y,test_size=0.2, random_state=42)
 
 
-# In[33]:
 
-
+# Create a linear regression model instance
 from sklearn.linear_model import LinearRegression
 model= LinearRegression()
+# Train the model on the training data
 model.fit(x_train , y_train)
 
-
-# In[34]:
-
-
+# Make predictions on the test data
 y_pred = model.predict(x_test)
 
-
-# In[35]:
-
-
-from sklearn.metrics import mean_squared_error, r2_score
+# Calculate Mean Squared Error (MSE) to evaluate model performance
 mse = mean_squared_error(y_test, y_pred)
 r2 = r2_score(y_test, y_pred)
 print('MSE:', mse)
 print('R² Score:', r2)
 
-
-# In[36]:
 
 
 import matplotlib.pyplot as plt
@@ -280,7 +211,6 @@ plt.legend()
 plt.show()
 
 
-# In[41]:
 
 
 # Predict on test data
@@ -298,32 +228,6 @@ plt.ylabel('Predicted Profit')
 plt.title('Actual vs Predicted Values')
 plt.show()
 
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
 
 
 
